@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,7 +128,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bf_compiler.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="transpiler.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bf_compiler.hpp" />
+    <ClInclude Include="transpiler.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src.bx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

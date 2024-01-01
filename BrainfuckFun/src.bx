@@ -1,7 +1,7 @@
-num x 50
-num y 3
-set y 50
-num z 50
+num x 150
+num y -3
+set y -50
+num z -50
 add x y to z
 copy z to x
 print x

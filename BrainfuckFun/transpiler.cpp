@@ -83,29 +83,32 @@ static void set_current_to_value(int value, std::string& generated_code)
 	{
 		return;
 	}
-
-	int sqrt = std::sqrt(value);
-
-	//go one to right of current pointer
-	//this is allowed, since a variable has always 3 spaces occupied
-	generated_code += ">";
-
-	//set the value to the square root of the value
-	for (int i = 0; i < sqrt; i++)
+	int curr_val = 0;
+	if (value > 10)
 	{
-		generated_code += "+";
+		int sqrt = std::sqrt(value);
+
+		//go one to right of current pointer
+		//this is allowed, since a variable has always 3 spaces occupied
+		generated_code += ">";
+
+		//set the value to the square root of the value
+		for (int i = 0; i < sqrt; i++)
+		{
+			generated_code += "+";
+		}
+
+		//go back to the current pointer
+		generated_code += "[<";
+		for (int i = 0; i < sqrt; i++)
+		{
+			//add the square root to the current pointer
+			generated_code += "+";
+		}
+		generated_code += ">-]<";
+		curr_val = sqrt * sqrt;
 	}
 
-	//go back to the current pointer
-	generated_code += "[<";
-	for (int i = 0; i < sqrt; i++)
-	{
-		//add the square root to the current pointer
-		generated_code += "+";
-	}
-	generated_code += ">-]<";
-
-	int curr_val = sqrt * sqrt;
 	while (curr_val != value)
 	{
 		if (curr_val < value)
@@ -252,6 +255,7 @@ std::string transpiler::bx_file_to_bf(std::string bx_filename)
 		std::vector<std::string> tokens;
 		split_line(line, tokens, ' ');
 
+		//num var_name value
 		if (tokens[0] == "num")
 		{
 			if (tokens.size() != 3)
@@ -262,6 +266,7 @@ std::string transpiler::bx_file_to_bf(std::string bx_filename)
 
 			add_var(tokens[1], std::stoi(tokens[2]), current_pointer, new_var_location, var_space, generated_code, variables);
 		}
+		//print var_name
 		else if (tokens[0] == "print")
 		{
 			if (tokens.size() != 2)
@@ -273,6 +278,7 @@ std::string transpiler::bx_file_to_bf(std::string bx_filename)
 			move_current_pointer_to_var(generated_code, current_pointer, tokens[1], variables);
 			generated_code += ".";
 		}
+		//copy var_name_from to var_name_to
 		else if (tokens[0] == "copy")
 		{
 			if (tokens.size() != 4)
@@ -283,6 +289,7 @@ std::string transpiler::bx_file_to_bf(std::string bx_filename)
 
 			copy_var_to_var(tokens[1], tokens[3], current_pointer, generated_code, variables);
 		}
+		//set var_name value
 		else if (tokens[0] == "set")
 		{
 			if (tokens.size() != 3)
@@ -295,6 +302,7 @@ std::string transpiler::bx_file_to_bf(std::string bx_filename)
 			set_current_to_zero(generated_code);
 			set_current_to_value(std::stoi(tokens[2]), generated_code);
 		}
+		//add x y to z
 		else if (tokens[0] == "add")
 		{
 			if (tokens.size() != 5)
@@ -329,6 +337,8 @@ std::string transpiler::bx_file_to_bf(std::string bx_filename)
 			//generated_code += "copy res reg to res var";
 			move_var_to_var(current_pointer, register3, tokens[4], generated_code, variables);
 
+			//just removing these variables is fine
+			//because all are set to 0 after this operation
 			remove_variable_from_list(register1, variables);
 			remove_variable_from_list(register2, variables);
 			remove_variable_from_list(register3, variables);
